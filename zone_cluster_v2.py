@@ -298,6 +298,7 @@ def main():
     center = (float(df["lat"].mean()), float(df["lon"].mean()))
     leaflet = f"{out_prefix}_leaflet_map.html"
     make_folium_map(df, centers, center, leaflet)
+# comment
 
     gmap = None
     if args.make_google_map:

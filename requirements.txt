@@ -3,3 +3,4 @@ scikit-learn==1.5.2
 folium==0.17.0
 shapely==2.0.4
 xlsxwriter==3.2.0
+

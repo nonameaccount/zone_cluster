@@ -13,7 +13,7 @@
 # .nfs files are created when an open file is removed but is still being accessed
 .nfs*
 
-### Python template
+### Python template 23
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
