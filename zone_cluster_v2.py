@@ -52,6 +52,14 @@ def choose_best_k(X, kmin=6, kmax=8, seed=42) -> int:
 # ----------------------------- geocoding helpers ------------------------------
 
 def assemble_query(row, city_context: Optional[str]) -> str:
+    # First check if there's a full "Address" column (capital A)
+    if "Address" in row and str(row.get("Address", "")).strip():
+        q = str(row.get("Address")).strip()
+        if city_context and city_context.lower() not in q.lower():
+            q = f"{q}, {city_context}"
+        return q
+
+    # Otherwise, assemble from individual components
     parts = [str(row.get(c, "")).strip() for c in ["address","city","state","zip"] if str(row.get(c, "")).strip()]
     q = ", ".join(parts)
     if city_context and city_context.lower() not in q.lower():
@@ -272,7 +280,10 @@ def main():
     args = ap.parse_args()
 
     df = pd.read_csv(args.input)
-    if "name" not in df.columns:
+    # Handle both "Name" and "name" columns
+    if "Name" in df.columns and "name" not in df.columns:
+        df["name"] = df["Name"]
+    elif "name" not in df.columns:
         df["name"] = None
 
     # Geocode
@@ -298,7 +309,7 @@ def main():
     center = (float(df["lat"].mean()), float(df["lon"].mean()))
     leaflet = f"{out_prefix}_leaflet_map.html"
     make_folium_map(df, centers, center, leaflet)
-# comment
+    # comment
 
     gmap = None
     if args.make_google_map:
